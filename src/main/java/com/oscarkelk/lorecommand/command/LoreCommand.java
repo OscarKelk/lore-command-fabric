@@ -10,6 +10,9 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import com.oscarkelk.lorecommand.LoreCommandMain;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
@@ -28,11 +31,15 @@ public class LoreCommand {
         ServerPlayerEntity player = context.getSource().getPlayer();
 
         ItemStack stack = player.getMainHandStack();
-        NbtCompound display1 = stack.getOrCreateSubNbt("display");
-        NbtList lore = new NbtList();
-        lore.add(NbtString.of(new_lore));
-        display1.put("Lore", lore);
-        player.giveItemStack(stack);
+        NbtCompound nbt = stack.getNbt();
+        NbtCompound nbtDisplay = nbt.getCompound(ItemStack.DISPLAY_KEY);
+        NbtList nbtLore = new NbtList();
+
+        nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore))));
+
+        nbtDisplay.put(ItemStack.LORE_KEY, nbtLore);
+        nbt.put(ItemStack.DISPLAY_KEY, nbtDisplay);
+        stack.setNbt(nbt);
 
         return 1;
     }
