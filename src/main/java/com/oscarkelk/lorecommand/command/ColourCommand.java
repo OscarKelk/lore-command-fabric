@@ -64,9 +64,11 @@ public class ColourCommand {
         ItemStack stack = player.getMainHandStack();
         NbtCompound nbt = stack.getNbt();
         NbtCompound nbtDisplay = nbt.getCompound(ItemStack.DISPLAY_KEY);
-        NbtList nbtLore = new NbtList();
 
-        nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore))));
+        NbtCompound lore = nbtDisplay.getCompound(ItemStack.LORE_KEY);
+
+        NbtList nbtLore = new NbtList();
+        nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText("test"))));
 
         nbtDisplay.put(ItemStack.LORE_KEY, nbtLore);
         nbt.put(ItemStack.DISPLAY_KEY, nbtDisplay);

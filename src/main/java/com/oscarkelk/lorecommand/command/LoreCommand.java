@@ -36,6 +36,7 @@ public class LoreCommand {
         NbtList nbtLore = new NbtList();
 
         nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore))));
+        nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(String.format("- %s", player.getEntityName())))));
 
         nbtDisplay.put(ItemStack.LORE_KEY, nbtLore);
         nbt.put(ItemStack.DISPLAY_KEY, nbtDisplay);
