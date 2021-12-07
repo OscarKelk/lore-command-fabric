@@ -9,10 +9,11 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import com.oscarkelk.lorecommand.LoreCommandMain;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+
+import java.util.Objects;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
@@ -81,52 +82,52 @@ public class LoreCommand {
         NbtCompound nbtDisplay = nbt.getCompound(ItemStack.DISPLAY_KEY);
         NbtList nbtLore = new NbtList();
 
-        if(colour == "black") {
+        if(Objects.equals(colour, "black")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.BLACK)))));
         }
-        else if(colour == "dark_blue") {
+        else if(Objects.equals(colour, "dark_blue")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_BLUE)))));
         }
-        else if(colour == "dark_green") {
+        else if(Objects.equals(colour, "dark_green")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GREEN)))));
         }
-        else if(colour == "dark_aqua") {
+        else if(Objects.equals(colour, "dark_aqua")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_AQUA)))));
         }
-        else if(colour == "dark_red") {
+        else if(Objects.equals(colour, "dark_red")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_RED)))));
         }
-        else if(colour == "dark_purple") {
+        else if(Objects.equals(colour, "dark_purple")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GRAY)))));
         }
-        else if(colour == "gold") {
+        else if(Objects.equals(colour, "gold")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GOLD)))));
         }
-        else if(colour == "gray") {
+        else if(Objects.equals(colour, "gray")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GRAY)))));
         }
-        else if(colour == "dark_gray") {
+        else if(Objects.equals(colour, "dark_gray")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GRAY)))));
         }
-        else if(colour == "blue") {
+        else if(Objects.equals(colour, "blue")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.BLUE)))));
         }
-        else if(colour == "green") {
+        else if(Objects.equals(colour, "green")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GREEN)))));
         }
-        else if(colour == "aqua") {
+        else if(Objects.equals(colour, "aqua")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.AQUA)))));
         }
-        else if(colour == "red") {
+        else if(Objects.equals(colour, "red")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.RED)))));
         }
-        else if(colour == "light_purple") {
+        else if(Objects.equals(colour, "light_purple")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.LIGHT_PURPLE)))));
         }
-        else if(colour == "yellow") {
+        else if(Objects.equals(colour, "yellow")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.YELLOW)))));
         }
-        else if(colour == "white") {
+        else if(Objects.equals(colour, "white")) {
             nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.WHITE)))));
         }
 
