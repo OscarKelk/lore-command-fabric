@@ -3,17 +3,22 @@ package com.oscarkelk.lorecommand.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.network.MessageType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 
+import java.lang.reflect.Array;
 import java.util.Objects;
+import java.util.Random;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
@@ -78,64 +83,59 @@ public class LoreCommand {
         ServerPlayerEntity player = context.getSource().getPlayer();
 
         ItemStack stack = player.getMainHandStack();
-        NbtCompound nbt = stack.getNbt();
-        NbtCompound nbtDisplay = nbt.getCompound(ItemStack.DISPLAY_KEY);
-        NbtList nbtLore = new NbtList();
+        String[] messages = new String[] {"Why should this item have lore. It seems more fitting for a tool.", "This does not need lore", String.format("This is just a bit of %s, it doesn't need lore", stack.getItem().getName()), "Maybe you could add lore to a tool?", "Try adding lore to something else", "That isn't very worthy of lore."};
 
-        if(Objects.equals(colour, "black")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.BLACK)))));
+        if (stack.getItem().getGroup() != ItemGroup.TOOLS && stack.getItem().getGroup() != ItemGroup.COMBAT) {
+            Random random = new Random();
+            int index = random.nextInt(messages.length);
+            player.sendMessage(Text.of(messages[index]), MessageType.CHAT, Util.NIL_UUID);
         }
-        else if(Objects.equals(colour, "dark_blue")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_BLUE)))));
-        }
-        else if(Objects.equals(colour, "dark_green")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GREEN)))));
-        }
-        else if(Objects.equals(colour, "dark_aqua")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_AQUA)))));
-        }
-        else if(Objects.equals(colour, "dark_red")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_RED)))));
-        }
-        else if(Objects.equals(colour, "dark_purple")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GRAY)))));
-        }
-        else if(Objects.equals(colour, "gold")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GOLD)))));
-        }
-        else if(Objects.equals(colour, "gray")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GRAY)))));
-        }
-        else if(Objects.equals(colour, "dark_gray")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GRAY)))));
-        }
-        else if(Objects.equals(colour, "blue")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.BLUE)))));
-        }
-        else if(Objects.equals(colour, "green")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GREEN)))));
-        }
-        else if(Objects.equals(colour, "aqua")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.AQUA)))));
-        }
-        else if(Objects.equals(colour, "red")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.RED)))));
-        }
-        else if(Objects.equals(colour, "light_purple")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.LIGHT_PURPLE)))));
-        }
-        else if(Objects.equals(colour, "yellow")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.YELLOW)))));
-        }
-        else if(Objects.equals(colour, "white")) {
-            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.WHITE)))));
-        }
+        else {
 
-        nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(String.format("- %s", player.getEntityName())))));
+            NbtCompound nbt = stack.getNbt();
+            NbtCompound nbtDisplay = nbt.getCompound(ItemStack.DISPLAY_KEY);
+            NbtList nbtLore = new NbtList();
 
-        nbtDisplay.put(ItemStack.LORE_KEY, nbtLore);
-        nbt.put(ItemStack.DISPLAY_KEY, nbtDisplay);
-        stack.setNbt(nbt);
+            if (Objects.equals(colour, "black")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.BLACK)))));
+            } else if (Objects.equals(colour, "dark_blue")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_BLUE)))));
+            } else if (Objects.equals(colour, "dark_green")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GREEN)))));
+            } else if (Objects.equals(colour, "dark_aqua")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_AQUA)))));
+            } else if (Objects.equals(colour, "dark_red")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_RED)))));
+            } else if (Objects.equals(colour, "dark_purple")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GRAY)))));
+            } else if (Objects.equals(colour, "gold")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GOLD)))));
+            } else if (Objects.equals(colour, "gray")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GRAY)))));
+            } else if (Objects.equals(colour, "dark_gray")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.DARK_GRAY)))));
+            } else if (Objects.equals(colour, "blue")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.BLUE)))));
+            } else if (Objects.equals(colour, "green")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.GREEN)))));
+            } else if (Objects.equals(colour, "aqua")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.AQUA)))));
+            } else if (Objects.equals(colour, "red")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.RED)))));
+            } else if (Objects.equals(colour, "light_purple")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.LIGHT_PURPLE)))));
+            } else if (Objects.equals(colour, "yellow")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.YELLOW)))));
+            } else if (Objects.equals(colour, "white")) {
+                nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(new_lore).styled(style -> style.withFormatting(Formatting.WHITE)))));
+            }
+
+            nbtLore.add(NbtString.of(Text.Serializer.toJson(new LiteralText(String.format("- %s", player.getEntityName())))));
+
+            nbtDisplay.put(ItemStack.LORE_KEY, nbtLore);
+            nbt.put(ItemStack.DISPLAY_KEY, nbtDisplay);
+            stack.setNbt(nbt);
+        }
 
         return 1;
     }
